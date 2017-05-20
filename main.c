@@ -23,7 +23,7 @@
 int lsh_cd(char **args);
 int lsh_help(char **args);
 int lsh_exit(char **args);
-int lsh_scom(charr **args);
+int lsh_scom(char **args);
 
 /*
   List of builtin commands, followed by their corresponding functions.
@@ -48,6 +48,7 @@ int lsh_num_builtins() {
 
 /*
   Builtin function implementations.
+  // TODO: move to other file ... imps.c
 */
 
 /**
@@ -55,13 +56,14 @@ int lsh_num_builtins() {
    @param args List of args.  args[0] is "cd".  args[1] is the directory.
    @return Always returns 1, to continue executing.
  */
+
 int lsh_cd(char **args)
 {
   if (args[1] == NULL) {
     fprintf(stderr, "scom: unexpected lack of arguments at \"cd\"; line 0\n");
   } else {
     if (chdir(args[1]) != 0) {
-      perror("lsh");
+      perror("scom");
     }
   }
   return 1;
@@ -71,6 +73,7 @@ int lsh_scom(char **args)
 {
   printf("You must configure spider command script before executing\n");
   printf("Please run `config scom --setup init` first");
+  return 0;
 }
 
 /**
@@ -81,15 +84,15 @@ int lsh_scom(char **args)
 int lsh_help(char **args)
 {
   int i;
-  printf("Spider Prompt Service\n");
-  printf("\t\n");
-  printf("The following are built in:\n");
+  printf("~~~ Spider Prompt Service ~~~\n");
+  printf("\tAvalible Modules: \n");
 
+  // for each builtin function
   for (i = 0; i < lsh_num_builtins(); i++) {
-    printf("  %s\n", builtin_str[i]);
+    printf("\t\t%s\n", builtin_str[i]);
   }
 
-  printf("Use the man command for information on other programs.\n");
+  printf("\tUse the man command for information about system programs.\n");
   return 1;
 }
 
@@ -261,7 +264,7 @@ int print_motd(void) {
     struct tm *tm = localtime(&t);
     char s[64];
     strftime(s, sizeof(s), "%c", tm);
-    printf("%s\n", s);
+    printf("User: <user>    Timestamp: %s   Version: 1.1\n", s);
 }
 
 
